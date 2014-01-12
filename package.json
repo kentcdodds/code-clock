@@ -1,0 +1,31 @@
+{
+  "name": "code-clock",
+  "description": "Clock in and clock out with code-clock. Helps to keep a log of how much time you spend working with a file in your project.",
+  "version": "0.0.1",
+  "homepage": "https://github.com/kentcdodds/code-clock",
+  "author": {
+    "name": "Kent C. Dodds",
+    "email": "kent@doddsfamily.us",
+    "url": "http://kent.doddsfamily.us"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://kentcdodds@github.com/kentcdodds/code-clock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kentcdodds/code-clock/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/kentcdodds/code-clock/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "csv": "~0.3.6",
+    "commander": "~2.1.0"
+  }
+}

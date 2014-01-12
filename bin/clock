@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var commander = require('commander');
+
+commander
+  .version('0.0.1')
+  .description('A utility to keep your actual time working and your commit history in sync.')
+  .option('-f, --file <path>', 'The output file (defaults to "<current directory>/code-clock.csv")')
+  .option('-u, --user <username>', 'The user to record (defaults to ' + process.env.USER || process.env.USERNAME + ')')
+  .option('-m, --message <string>', 'Any message to add to the line')
+  .option('-d, --debug', 'Show debug messages');
+
+commander.command('in')
+  .description('clock in')
+  .action(function(){
+    run({
+      'in': true
+    });
+  });
+
+commander.command('out')
+  .description('clock out')
+  .action(function(){
+    run({
+      out: true
+    });
+  });
+
+commander.command('r')
+  .description('run with the given options')
+  .action(function(){
+    run();
+  });
+
+
+commander.parse(process.argv);
+
+function run(options) {
+  options = options || {};
+  require('../clock')({
+    'in': options.in || commander.in || false,
+    out: options.out || commander.out || false,
+    message: options.message || commander.message,
+    user: options.user || commander.user,
+    file: options.file || commander.file,
+    debug: options.debug || commander.debug
+  });
+}
