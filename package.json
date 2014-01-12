@@ -27,5 +27,9 @@
   "dependencies": {
     "csv": "~0.3.6",
     "commander": "~2.1.0"
+  },
+  "bin": {
+    "clock": "bin/clock"
   }
+
 }
