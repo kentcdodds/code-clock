@@ -1,5 +1,7 @@
 #code-clock
 
+[![NPM version](https://badge.fury.io/js/code-clock.png)](http://badge.fury.io/js/code-clock)
+
 Clock in and clock out with code-clock. Helps to keep a log of how much time you spend working with a file in your project.
 
 Using git timestamps helps, but you're not working the entire time between timestamps.
