@@ -6,7 +6,7 @@ Clock in and clock out with code-clock. Helps to keep a log of how much time you
 
 `npm install code-clock -g`
 
-Use:
+#Use:
 
 `clock --help`
 
