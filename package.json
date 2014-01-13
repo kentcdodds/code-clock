@@ -1,6 +1,6 @@
 {
   "name": "code-clock",
-  "description": "Clock in and code-clock out with code-clock. Helps to keep a log of how much time you spend working with a file in your project.",
+  "description": "Clock in and out with code-clock. Helps to keep a log of how much time you spend working with a csv file in your project.",
   "version": "0.0.5",
   "homepage": "https://github.com/kentcdodds/code-clock",
   "author": {
