@@ -5,14 +5,15 @@ var commander = require('commander');
 commander
   .version('0.0.1')
   .description('A utility to keep your actual time working and your commit history in sync.')
-  .option('-f, --file <path>', 'The output file (defaults to "<current directory>/code-clock.csv")')
+  .option('-f, --file <path>', 'The output file (defaults to "code-clock.csv")')
   .option('-u, --user <username>', 'The user to record (defaults to ' + process.env.USER || process.env.USERNAME + ')')
   .option('-m, --message <string>', 'Any message to add to the line')
+  .option('-s, --separator <string>', 'The message separator (defaults to "; ")')
   .option('-d, --debug', 'Show debug messages');
 
 commander.command('in')
   .description('clock in')
-  .action(function(){
+  .action(function() {
     run({
       'in': true
     });
@@ -20,15 +21,15 @@ commander.command('in')
 
 commander.command('out')
   .description('clock out')
-  .action(function(){
+  .action(function() {
     run({
       out: true
     });
   });
 
-commander.command('r')
-  .description('run with the given options')
-  .action(function(){
+commander.command('add-message')
+  .description('uses the options to add a message to the user\'s most recent clock in')
+  .action(function() {
     run();
   });
 
@@ -41,6 +42,7 @@ function run(options) {
     'in': options.in || commander.in || false,
     out: options.out || commander.out || false,
     message: options.message || commander.message,
+    messageSeparator: options.separator || commander.separator,
     user: options.user || commander.user,
     file: options.file || commander.file,
     debug: options.debug || commander.debug

@@ -5,7 +5,7 @@ var csv = require('csv');
 module.exports = function(options) {
   options = options || {};
   options.file = path.normalize(options.file || (process.cwd() + '/' + 'code-clock.csv'));
-  var now = new Date().getTime();
+  var now = new Date();
   var col = {
     user: 0,
     'in': 1,
@@ -15,6 +15,7 @@ module.exports = function(options) {
   };
   options.user = options.user || process.env.USER || process.env.USERNAME;
   options.message = options.message || '';
+  options.messageSeparator = options.messageSeparator || '; ';
 
   if (!fs.existsSync(options.file) && !options.in && !options.out) {
     console.warn('Cannot add a message with an empty log file');
@@ -54,7 +55,7 @@ module.exports = function(options) {
     });
 
     function clockIn(data) {
-      data.push([ options.user, now, '', 0, '' ]);
+      data.push([ options.user, formatDate(now), '', '', '' ]);
     }
 
     function clockOut(data) {
@@ -78,10 +79,37 @@ module.exports = function(options) {
         }
         console.warn('Clocking in and then out immediately...');
       } else {
-        var inDate = parseFloat(lastLine[col.in]);
-        lastLine[col.total] = Math.round((now - inDate) / 1000, 0);
+        var inDate = new Date(lastLine[col.in]);
+        lastLine[col.total] = formatDuration(inDate, now);
       }
-      lastLine[col.out] = now;
+      lastLine[col.out] = formatDate(now);
+    }
+
+    function addZero(num) {
+      return (num < 10 ? '0' + num : num);
+    }
+
+    function formatDuration(start, end) {
+      var diffInSeconds = Math.round((end - start) / 1000);
+      var hours = Math.floor(diffInSeconds / 3600);
+      var minutes = Math.floor((diffInSeconds - (hours * 3600)) / 60);
+      var seconds = diffInSeconds - (hours * 3600) - (minutes * 60);
+
+      return addZero(hours) + ':' + addZero(minutes) + ':' + addZero(seconds);
+    }
+
+    function formatDate(d) {
+      var month = d.getMonth() + 1;
+      var day = d.getDate();
+      var year = d.getFullYear();
+      var hour = d.getHours();
+      var minute = d.getMinutes();
+      var second = d.getSeconds();
+
+      var date = month + '/' + day + '/' + year;
+      var time = addZero(hour) + ':' + addZero(minute) + ':' + addZero(second);
+
+      return date + ' ' + time;
     }
 
     function getUsersLastLine(user, data) {
@@ -94,9 +122,15 @@ module.exports = function(options) {
     }
 
     function addMessage(data) {
-      var lastLine = data[data.length - 1];
-      var previousMessage = lastLine[col.message];
-      lastLine[col.message] = (previousMessage ? previousMessage + ' - ' + options.message : options.message);
+      var lastLine = getUsersLastLine(options.user, data);
+      if (lastLine) {
+        var previousMessage = lastLine[col.message];
+        lastLine[col.message] = (previousMessage ? previousMessage + options.messageSeparator + options.message : options.message);
+      } else {
+        console.warn('The user "' + options.user + '" has not clocked in.');
+        // If this is the case, then we have no need to save the file.
+        closeFile(data, false);
+      }
     }
 
     function log() {
