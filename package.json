@@ -1,7 +1,7 @@
 {
   "name": "code-clock",
   "description": "Clock in and clock out with code-clock. Helps to keep a log of how much time you spend working with a file in your project.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/kentcdodds/code-clock",
   "author": {
     "name": "Kent C. Dodds",
@@ -9,7 +9,6 @@
     "url": "http://kent.doddsfamily.us"
   },
   "repository": {
-    "type": "git",
     "url": "https://kentcdodds@github.com/kentcdodds/code-clock.git"
   },
   "bugs": {
@@ -18,7 +17,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/kentcdodds/code-clock/blob/master/LICENSE-MIT"
+      "url": "https://github.com/kentcdodds/code-clock/blob/master/LICENSE"
     }
   ],
   "engines": {

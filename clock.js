@@ -43,14 +43,14 @@ module.exports = function(options) {
       if (options.message) {
         log('adding message');
         addMessage(data);
-      } else if (options.message) {
+      } else if (data.length <= 1) {
         console.warn('Cannot add a message with an empty log file');
         closeFile(data, false);
         return;
       }
       log('saving file');
       csv().from(data).to(options.file);
-      closeFile(data);
+      closeFile(data, true);
     });
 
     function clockIn(data) {
