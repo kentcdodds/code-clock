@@ -38,7 +38,7 @@ commander.parse(process.argv);
 
 function run(options) {
   options = options || {};
-  require('../clock')({
+  require('../code-clock')({
     'in': options.in || commander.in || false,
     out: options.out || commander.out || false,
     message: options.message || commander.message,
