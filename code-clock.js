@@ -5,6 +5,7 @@ var csv = require('csv');
 module.exports = function(options) {
   options = options || {};
   options.file = path.normalize(options.file || (process.cwd() + '/' + 'code-clock.csv'));
+  var linesAffected = [];
   var now = new Date();
   var col = {
     user: 0,
@@ -29,6 +30,7 @@ module.exports = function(options) {
       return;
     }
 
+
     csv().from.path(options.file).to.array(function(data) {
       if (!data[0].length) {
         data[0] = ['User', 'In', 'Out', 'Total Seconds', 'Messages'];
@@ -46,16 +48,25 @@ module.exports = function(options) {
         addMessage(data);
       } else if (data.length <= 1) {
         console.warn('Cannot add a message with an empty log file');
-        closeFile(data, false);
+        closeFile(false);
         return;
       }
       log('saving file');
-      csv().from(data).to(options.file);
-      closeFile(data, true);
+      csv().from(data.concat([[]])).to(options.file);
+      closeFile();
     });
-
     function clockIn(data) {
+      var lastLine = getUsersLastLine(options.user, data);
+      if (lastLine && !lastLine[col.out]) {
+        console.warn('The user ' + options.user + ' did not clock out last time (starting at '
+          + lastLine[col.in] +  '). Clocking out and clocking in.');
+        lastLine[col.out] = formatDate(now);
+        var inDate = new Date(lastLine[col.in]);
+        lastLine[col.total] = formatDuration(inDate, now);
+        linesAffected.push(lastLine);
+      }
       data.push([ options.user, formatDate(now), '', '', '' ]);
+      linesAffected.push(data[data.length - 1]);
     }
 
     function clockOut(data) {
@@ -65,8 +76,8 @@ module.exports = function(options) {
         lastLine = data[data.length - 1];
         lastLine[col.user] = options.user;
       }
-
       var alreadyClockedOut = lastLine[col.out].length !== 0;
+
       var notClockedIn = lastLine[col.in].length === 0;
       if (alreadyClockedOut || notClockedIn) {
         clockIn(data);
@@ -83,6 +94,7 @@ module.exports = function(options) {
         lastLine[col.total] = formatDuration(inDate, now);
       }
       lastLine[col.out] = formatDate(now);
+      linesAffected.push(lastLine);
     }
 
     function addZero(num) {
@@ -126,10 +138,13 @@ module.exports = function(options) {
       if (lastLine) {
         var previousMessage = lastLine[col.message];
         lastLine[col.message] = (previousMessage ? previousMessage + options.messageSeparator + options.message : options.message);
+        if (linesAffected.indexOf(lastLine) === -1) {
+          linesAffected.push(lastLine);
+        }
       } else {
         console.warn('The user "' + options.user + '" has not clocked in.');
         // If this is the case, then we have no need to save the file.
-        closeFile(data, false);
+        closeFile(false);
       }
     }
 
@@ -139,16 +154,27 @@ module.exports = function(options) {
       }
     }
 
-    function closeFile(data, printChanged) {
+    function getLinesAffected() {
+      for (var i = 0; i < linesAffected.length; i++) {
+        linesAffected[i] = linesAffected[i].join(',');
+      }
+      return linesAffected.join('\n');
+    }
+
+    function closeFile(data, dontPrintChanged) {
       fs.close(fd, function(err) {
         if (err) {
           console.error('There was an error saving the file: ' + options.file, err);
           process.exit(1);
           return;
         }
-        if (printChanged) {
+        if (!dontPrintChanged) {
           console.log('File: ', options.file);
-          console.log('Line affected: ', data[data.length - 1].join(','));
+          var affected = 'Line affected: ';
+          if (linesAffected.length > 1) {
+            affected = 'Lines affected:\n';
+          }
+          console.log(affected + getLinesAffected());
         }
       });
     }

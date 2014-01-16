@@ -22,22 +22,23 @@ see everything that has changed with the lines that were added to the `.csv`.
 outputs:
 
 ```
-Usage: clock [options] [command]
+  Usage: code-clock [options] [command]
 
   Commands:
 
     in                     clock in
     out                    clock out
-    r                      run with the given options
+    add-message            uses the options to add a message to the user's most recent clock in
 
   Options:
 
-    -h, --help              output usage information
-    -V, --version           output the version number
-    -f, --file <path>       The output file (defaults to "<current directory>/code-clock.csv")
-    -u, --user <username>   The user to record (defaults to kentcdodds
-    -m, --message <string>  Any message to add to the line
-    -d, --debug             Show debug messages
+    -h, --help                output usage information
+    -V, --version             output the version number
+    -f, --file <path>         The output file (defaults to "code-clock.csv")
+    -u, --user <username>     The user to record (defaults to kentcdodds
+    -m, --message <string>    Any message to add to the line
+    -s, --separator <string>  The message separator (defaults to "; ")
+    -d, --debug               Show debug messages
 ```
 
 #Features
@@ -50,7 +51,7 @@ User,In,Out,Total Seconds,Messages
 
 It will get the user from the currently logged in user or you can specify it with an option.
 
-If you run `code r -m "This is a message"` then it will add that message to the most recent
+If you run `code add-message -m "This is a message"` then it will add that message to the most recent
 clock in for the user specified (or logged in).
 
 #Issues

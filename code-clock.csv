@@ -1,3 +1,4 @@
 User,In,Out,Total Seconds,Messages
 kentcdodds,1/12/2014 9:49:48,1/12/2014 10:35:49,00:46:00,just noticed a few changes needed to be made...
 kentcdodds,1/13/2014 06:07:05,1/13/2014 07:09:40,01:02:35,I think I need to change from epoch to a timestamp; Decided to change the formatting to match Google Spreadsheets
+kentcdodds,1/16/2014 07:45:32,1/16/2014 08:06:34,00:21:02,getting ready for ng-conf!
