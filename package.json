@@ -24,7 +24,7 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
-    "csv": "0.3.7",
+    "csv": "0.4.6",
     "commander": "2.1.0"
   },
   "bin": {
